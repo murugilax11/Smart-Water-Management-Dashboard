@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Water Management Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Chart.js CDN (FREE) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+           <div class="logo">
+               <img src="water-logo.png" alt="Water Logo">
+            <h2>WaterDash</h2>
+   
+           </div>
+            <ul>
+                <li class="active">Dashboard</li>
+                <li>Daily Usage</li>
+                <li>Monthly Report</li>
+                <li>Settings</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <!-- Header -->
+           <header class="header">
+    <div class="left-header">
+        <button id="menuToggle" class="menu-btn">☰</button>
+        <div class="overlay" id="overlay"></div>
+        <h1>Smart Household Water Dashboard</h1>
+    </div>
+    <button id="themeToggle">Toggle Theme</button>
+</header>
+
+            <!-- Summary Cards -->
+            <section class="cards">
+
+                <div class="card">
+                    <h3>Total Usage Today</h3>
+                    <p id="totalUsage">250 L</p>
+                </div>
+
+                <div class="card">
+                    <h3>Grey Water Reused</h3>
+                    <p id="greyWater">120 L</p>
+                </div>
+
+                <div class="card">
+                    <h3>Efficiency</h3>
+                    <p id="efficiency">48%</p>
+                </div>
+
+                <div class="card">
+                    <h3>Status</h3>
+                    <p id="status">Normal</p>
+                </div>
+
+            </section>
+
+            <!-- Chart Section -->
+            <section class="chart-section">
+             <h2>Daily Water Usage</h2>
+
+                 <div class="chart-container">
+                  <canvas id="waterChart"></canvas>
+                 </div>
+                </section>
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
