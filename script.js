@@ -94,6 +94,31 @@ function updateWaterData() {
     waterChart.update();
 }
 
+// ===== WEEKLY TREND DATA =====
+
+const trendData = [220, 260, 240, 300, 280, 320, 290];
+
+const trendCtx = document.getElementById("trendChart").getContext("2d");
+
+const trendChart = new Chart(trendCtx, {
+    type: "line",
+    data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+            label: "Daily Usage (Liters)",
+            data: trendData,
+            borderColor: "#0284c7",
+            backgroundColor: "rgba(2,132,199,0.2)",
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
 
 // ===== INITIAL LOAD =====
 updateUI();

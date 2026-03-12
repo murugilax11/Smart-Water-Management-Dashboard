@@ -194,6 +194,23 @@ body.dark .header h1 {
 body.dark #themeToggle {
     background-color: #0284c7;
 }
+
+/*==== saving tips section =====*/
+.tips{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-top:30px;
+}
+
+.tips ul{
+    margin-top:10px;
+    padding-left:20px;
+}
+
+.tips li{
+    margin-bottom:8px;
+}
 /* ===== MOBILE RESPONSIVE ===== */
 
 @media (max-width: 768px) {
