@@ -1,11 +1,15 @@
-// ===== INITIAL DATA =====
-const waterData = {
-    totalUsage: 300,
-    greyWater: 150,
-    kitchen: 80,
-    bathroom: 150,
-    garden: 70
-};
+// ===== LOAD DATA FROM LOCAL STORAGE =====
+let waterData = JSON.parse(localStorage.getItem("waterData"));
+
+if (!waterData) {
+    waterData = {
+        totalUsage: 300,
+        greyWater: 150,
+        kitchen: 80,
+        bathroom: 150,
+        garden: 70
+    };
+}
 
 // ===== CALCULATE EFFICIENCY =====
 function calculateEfficiency() {
@@ -37,8 +41,7 @@ function updateUI() {
     }
 }
 
-
-// ===== CREATE CHART =====
+// ===== CREATE BAR CHART =====
 const ctx = document.getElementById("waterChart").getContext("2d");
 
 const waterChart = new Chart(ctx, {
@@ -62,40 +65,15 @@ const waterChart = new Chart(ctx, {
     },
     options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        animation: {
+            duration: 2000,
+            easing: "easeOutBounce"
+        }
     }
 });
 
-
-// ===== SIMULATE SENSOR DATA =====
-function updateWaterData() {
-
-    waterData.kitchen = Math.floor(Math.random() * 120);
-    waterData.bathroom = Math.floor(Math.random() * 180);
-    waterData.garden = Math.floor(Math.random() * 100);
-
-    waterData.totalUsage =
-        waterData.kitchen +
-        waterData.bathroom +
-        waterData.garden;
-
-    waterData.greyWater = Math.floor(waterData.totalUsage * 0.5);
-
-    // update UI
-    updateUI();
-
-    // update chart values
-    waterChart.data.datasets[0].data = [
-        waterData.kitchen,
-        waterData.bathroom,
-        waterData.garden
-    ];
-
-    waterChart.update();
-}
-
-// ===== WEEKLY TREND DATA =====
-
+// ===== WEEKLY TREND LINE CHART =====
 const trendData = [220, 260, 240, 300, 280, 320, 290];
 
 const trendCtx = document.getElementById("trendChart").getContext("2d");
@@ -119,18 +97,64 @@ const trendChart = new Chart(trendCtx, {
     }
 });
 
+// ===== SIMULATE SENSOR DATA =====
+function updateWaterData() {
+
+    waterData.kitchen = Math.floor(Math.random() * 120);
+    waterData.bathroom = Math.floor(Math.random() * 180);
+    waterData.garden = Math.floor(Math.random() * 100);
+
+    waterData.totalUsage =
+        waterData.kitchen +
+        waterData.bathroom +
+        waterData.garden;
+
+    waterData.greyWater = Math.floor(waterData.totalUsage * 0.5);
+
+    // update UI
+    updateUI();
+
+    // update chart
+    waterChart.data.datasets[0].data = [
+        waterData.kitchen,
+        waterData.bathroom,
+        waterData.garden
+    ];
+
+    waterChart.update();
+
+    // save data
+    localStorage.setItem("waterData", JSON.stringify(waterData));
+}
 
 // ===== INITIAL LOAD =====
 updateUI();
 
-
-// ===== AUTO UPDATE EVERY 5s =====
+// ===== AUTO UPDATE EVERY 5 SECONDS =====
 setInterval(updateWaterData, 5000);
 
-
-// ===== THEME TOGGLE =====
+// ===== DARK MODE TOGGLE =====
 const themeBtn = document.getElementById("themeToggle");
 
-themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-});
+if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+    });
+}
+
+// ===== EXPORT PDF REPORT =====
+const downloadBtn = document.getElementById("downloadReport");
+
+if (downloadBtn) {
+
+    downloadBtn.addEventListener("click", () => {
+
+        const element = document.querySelector(".main");
+
+        html2pdf()
+            .from(element)
+            .save("Water_Report.pdf");
+
+    });
+
+}
