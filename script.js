@@ -11,6 +11,28 @@ if (!waterData) {
     };
 }
 
+function toggleSidebar() {
+
+const sidebar = document.querySelector(".sidebar");
+const overlay = document.getElementById("overlay");
+
+sidebar.classList.toggle("active");
+overlay.classList.toggle("active");
+
+}
+
+function closeSidebar(){
+
+const sidebar = document.querySelector(".sidebar");
+const overlay = document.getElementById("overlay");
+
+sidebar.classList.remove("active");
+overlay.classList.remove("active");
+
+}
+// ===== STORE LAST 5 MIN DATA =====
+let usageHistory = [];
+
 // ===== CALCULATE EFFICIENCY =====
 function calculateEfficiency() {
     return ((waterData.greyWater / waterData.totalUsage) * 100).toFixed(1);
@@ -73,7 +95,8 @@ const waterChart = new Chart(ctx, {
     }
 });
 
-// ===== WEEKLY TREND LINE CHART =====
+
+// ===== WEEKLY TREND CHART =====
 const trendData = [220, 260, 240, 300, 280, 320, 290];
 
 const trendCtx = document.getElementById("trendChart").getContext("2d");
@@ -97,6 +120,7 @@ const trendChart = new Chart(trendCtx, {
     }
 });
 
+
 // ===== SIMULATE SENSOR DATA =====
 function updateWaterData() {
 
@@ -111,6 +135,23 @@ function updateWaterData() {
 
     waterData.greyWater = Math.floor(waterData.totalUsage * 0.5);
 
+    // store history
+    usageHistory.push({
+        time: new Date().toLocaleTimeString(),
+        kitchen: waterData.kitchen,
+        bathroom: waterData.bathroom,
+        garden: waterData.garden,
+        total: waterData.totalUsage
+    });
+
+    // keep last 60 entries (~5 mins)
+    if (usageHistory.length > 60) {
+        usageHistory.shift();
+    }
+
+    // save to localStorage
+    localStorage.setItem("waterData", JSON.stringify(waterData));
+
     // update UI
     updateUI();
 
@@ -122,38 +163,54 @@ function updateWaterData() {
     ];
 
     waterChart.update();
-
-    // save data
-    localStorage.setItem("waterData", JSON.stringify(waterData));
 }
+
 
 // ===== INITIAL LOAD =====
 updateUI();
 
-// ===== AUTO UPDATE EVERY 5 SECONDS =====
+
+// ===== AUTO UPDATE EVERY 5 SEC =====
 setInterval(updateWaterData, 5000);
+
 
 // ===== DARK MODE TOGGLE =====
 const themeBtn = document.getElementById("themeToggle");
 
 if (themeBtn) {
     themeBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
+        document.body.classList.toggle("dark");
     });
 }
 
-// ===== EXPORT PDF REPORT =====
-const downloadBtn = document.getElementById("downloadReport");
 
-if (downloadBtn) {
+// ===== EXCEL DOWNLOAD =====
+const excelBtn = document.getElementById("downloadExcel");
 
-    downloadBtn.addEventListener("click", () => {
+if (excelBtn) {
+    excelBtn.addEventListener("click", () => {
 
-        const element = document.querySelector(".main");
+        const worksheet = XLSX.utils.json_to_sheet(usageHistory);
+        const workbook = XLSX.utils.book_new();
 
-        html2pdf()
-            .from(element)
-            .save("Water_Report.pdf");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Water Data");
+
+        XLSX.writeFile(workbook, "Water_Data.xlsx");
+    });
+}
+
+
+// ===== GRAPH DOWNLOAD =====
+const graphBtn = document.getElementById("downloadGraph");
+
+if (graphBtn) {
+
+    graphBtn.addEventListener("click", () => {
+
+        const link = document.createElement("a");
+        link.href = waterChart.toBase64Image();
+        link.download = "water_usage_chart.png";
+        link.click();
 
     });
 

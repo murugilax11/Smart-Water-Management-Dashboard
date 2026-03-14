@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Smart Water Management Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Excel Library -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Chart.js CDN (FREE) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -35,12 +38,29 @@
             <!-- Header -->
            <header class="header">
     <div class="left-header">
-        <button id="menuToggle" class="menu-btn">☰</button>
-        <div class="overlay" id="overlay"></div>
+        <button id="menuToggle" class="menu-btn" onclick="toggleSidebar()">☰</button>
         <h1>Smart Water Management Dashboard</h1>
     </div>
-    <button id="themeToggle">Toggle Theme</button>
-<button id="downloadReport">Download Report</button>
+
+<div class="button-group">
+
+<button id="themeToggle">
+<i class="fa fa-sun"></i>
+<span>Theme</span>
+</button>
+
+<button id="downloadExcel">
+<i class="fa fa-file-excel"></i>
+<span>Excel</span>
+</button>
+
+<button id="downloadGraph">
+<i class="fa fa-file-image"></i>
+<span>Graph</span>
+</button>
+
+</div>
+
 </header>
 
             <!-- Summary Cards -->
@@ -97,7 +117,7 @@
         </main>
 
     </div>
-
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
     <script src="script.js"></script>
 </body>
 </html>
